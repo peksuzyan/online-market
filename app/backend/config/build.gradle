@@ -1,0 +1,7 @@
+ext {
+    jaxbVersion = '2.3.0'
+}
+
+dependencies {
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: jaxbVersion
+}
