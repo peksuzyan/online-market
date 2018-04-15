@@ -12,3 +12,7 @@
 
 **/logs
 *.log
+
+# Other
+
+cred.txt

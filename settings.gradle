@@ -1,13 +1,29 @@
 rootProject.name = 'OnlineMarket'
 
-include "app:backend"
-include "app:backend:configuration"
-include "app:backend:model"
-include "app:backend:controller"
-include "app:backend:view"
+// Includes subprojects
+include "app/backend"
+include "app/backend:config"
+include "app/backend:model"
+include "app/backend:controller"
+include "app/backend:view"
+include "app/backend:archive"
 
-include "app:database"
+include "app/database"
 
-include "app:frontend"
+include "app/frontend"
 
 include "distr"
+
+// Sets human-readable subproject names
+project(":app/backend").name = "backend"
+project(":app/backend:config").name = "config"
+project(":app/backend:model").name = "model"
+project(":app/backend:controller").name = "controller"
+project(":app/backend:view").name = "view"
+project(":app/backend:archive").name = "war"
+
+project(":app/database").name = "database"
+
+project(":app/frontend").name = "frontend"
+
+project(":distr").name = "delivery"
