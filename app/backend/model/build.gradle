@@ -1,0 +1,15 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.13.Final'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.2.13.Final'
+
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.38'
+}

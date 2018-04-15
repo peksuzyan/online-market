@@ -1,0 +1,13 @@
+rootProject.name = 'OnlineMarket'
+
+include "app:backend"
+include "app:backend:configuration"
+include "app:backend:model"
+include "app:backend:controller"
+include "app:backend:view"
+
+include "app:database"
+
+include "app:frontend"
+
+include "distr"
