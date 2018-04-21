@@ -1,7 +1,7 @@
 package com.gmail.eksuzyan.pavel.education.market.config;
 
-import com.gmail.eksuzyan.pavel.education.market.config.mapper.MarketProperty;
-import com.gmail.eksuzyan.pavel.education.market.config.mapper.MarketProperties;
+import com.gmail.eksuzyan.pavel.education.market.config.wrappers.PropertiesWrapper;
+import com.gmail.eksuzyan.pavel.education.market.config.wrappers.PropertyWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,79 +9,84 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.io.*;
+import java.util.Properties;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-@SuppressWarnings("WeakerAccess")
 public final class Configuration {
 
     private static final Logger LOG = LoggerFactory.getLogger(Configuration.class);
 
-    private static final String DEFAULT_CONFIG_FILE_NAME = "config.xml";
-    private static final ConcurrentMap<String, Configuration> CONTEXTS = new ConcurrentHashMap<>();
+    private static Configuration instance;
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final JAXBContext context;
-    private final File configFile;
 
-    private Configuration(File configFile) {
-        this.configFile = configFile;
+    private static final String DEFAULT_CONFIG_FILE_NAME = "config.xml";
+
+    private Configuration() {
         try {
-            this.context = JAXBContext.newInstance(MarketProperty.class, MarketProperties.class);
+            this.context = JAXBContext.newInstance(PropertyWrapper.class, PropertiesWrapper.class);
         } catch (JAXBException e) {
             LOG.error("Unable to initialize jaxb context. ", e);
             throw new IllegalStateException("Unable to initialize jaxb context. ", e);
         }
     }
 
-    public static Configuration of(String configFileName) {
-        if (configFileName == null)
-            configFileName = DEFAULT_CONFIG_FILE_NAME;
-
-        return CONTEXTS.computeIfAbsent(
-                configFileName, fileName -> new Configuration(new File(fileName)));
-    }
-
     public static Configuration current() {
-        return Configuration.of(DEFAULT_CONFIG_FILE_NAME);
+        if (instance == null)
+            synchronized (Configuration.class) {
+                if (instance == null)
+                    return instance = new Configuration();
+            }
+
+        return instance;
     }
 
-    public Map<String, String> read() throws IOException {
-        return read0().toMap();
-    }
-
-    private MarketProperties read0() throws IOException {
-        lock.readLock().lock();
-        try {
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            return (MarketProperties) unmarshaller.unmarshal(configFile);
-        } catch (JAXBException e) {
-            LOG.warn("Unable to read properties from file.", e);
-            throw new IOException("Unable to read properties from file.", e);
-        } finally {
-            lock.readLock().unlock();
+    public void write(Properties properties) throws IOException {
+        try (OutputStream os = new FileOutputStream(DEFAULT_CONFIG_FILE_NAME)) {
+            write(properties, os);
         }
     }
 
-    public void write(Map<String, String> properties) throws IOException {
-        write(MarketProperties.of(properties));
+    public Properties read() throws IOException {
+        try (InputStream is = new FileInputStream(DEFAULT_CONFIG_FILE_NAME)) {
+            return read(is);
+        }
     }
 
-    private void write(MarketProperties marketProperties) throws IOException {
+    void write(Properties properties, OutputStream outputStream) throws IOException {
+        write(PropertiesWrapper.of(properties), outputStream);
+    }
+
+    Properties read(InputStream inputStream) throws IOException {
+        return read0(inputStream).toProperties();
+    }
+
+    private void write(PropertiesWrapper properties, OutputStream outputStream) throws IOException {
         lock.writeLock().lock();
         try {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            marshaller.marshal(marketProperties, configFile);
+            marshaller.marshal(properties, outputStream);
         } catch (JAXBException e) {
-            LOG.warn("Unable to save properties to file.", e);
-            throw new IOException("Unable to save properties to file.", e);
+            LOG.warn("Unable to write properties. ", e);
+            throw new IOException("Unable to write properties. ", e);
         } finally {
             lock.writeLock().unlock();
+        }
+    }
+
+    private PropertiesWrapper read0(InputStream inputStream) throws IOException {
+        lock.readLock().lock();
+        try {
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            return (PropertiesWrapper) unmarshaller.unmarshal(inputStream);
+        } catch (JAXBException e) {
+            LOG.warn("Unable to read properties. ", e);
+            throw new IOException("Unable to read properties. ", e);
+        } finally {
+            lock.readLock().unlock();
         }
     }
 }

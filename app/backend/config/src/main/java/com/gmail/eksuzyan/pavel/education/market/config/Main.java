@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class Main {
 
@@ -18,7 +19,15 @@ public class Main {
 //        props.put("hello", "world");
 //        props.put("goodbye", "people");
 
-        Configuration.current().read().forEach((key, value) -> System.out.println(key + " - " + value));
+        Properties properties = new Properties();
+
+        properties.setProperty("goodbye", "people");
+        properties.setProperty("hello", "world");
+        properties.setProperty("password", "223ssdcd3%");
+
+        Configuration.current().write(properties);
+
+//        Configuration.current().read().forEach((key, value) -> System.out.println(key + " - " + value));
 
     }
 

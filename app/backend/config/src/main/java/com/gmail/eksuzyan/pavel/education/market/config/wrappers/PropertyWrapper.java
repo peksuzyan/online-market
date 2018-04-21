@@ -1,26 +1,26 @@
-package com.gmail.eksuzyan.pavel.education.market.config.mapper;
+package com.gmail.eksuzyan.pavel.education.market.config.wrappers;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class MarketProperty {
+public class PropertyWrapper {
 
+    @SuppressWarnings("WeakerAccess")
     @XmlAttribute(name = "key")
     public String key;
 
+    @SuppressWarnings("WeakerAccess")
     @XmlAttribute(name = "value")
     public String value;
 
-    public MarketProperty() {
+    @SuppressWarnings("unused")
+    public PropertyWrapper() {
     }
 
-    private MarketProperty(String key, String value) {
+    PropertyWrapper(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
-    static MarketProperty of(String key, String value) {
-        return new MarketProperty(key, value);
-    }
 }
