@@ -4,16 +4,16 @@
 **/build
 **/out
 
-# IDE settings
+# IDE artifacts
 
 **/.idea
 
 # Application logs
 
 **/logs
-*.log
 
 # Other
 
 **/config.xml
+**/config-test.xml
 cred.txt

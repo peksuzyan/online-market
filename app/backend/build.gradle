@@ -7,6 +7,7 @@ subprojects {
     ext {
         logbackVersion = '1.2.3'
         junitVersion = '4.12'
+        mockitoVersion = '2.18.3'
     }
 
     sourceCompatibility = 1.8
@@ -21,9 +22,11 @@ subprojects {
         compile group: 'ch.qos.logback', name: 'logback-core', version: logbackVersion
 
         testCompile group: 'junit', name: 'junit', version: junitVersion
+        testCompile group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
+
     }
 
-    jar {
+    jar.doFirst {
         manifest {
             attributes(
                     "Build-Project": rootProject.name,
@@ -34,7 +37,9 @@ subprojects {
                     "Build-By-Name-Full": getProperty('market.built.by.name'),
                     "Build-Gradle-Version": gradle.gradleVersion,
                     "Build-Jdk-Version": JavaVersion.current(),
-                    "Build-Created": new Date().format('yyyy-MM-dd HH:mm')
+                    "Build-Created": new Date().format('yyyy-MM-dd HH:mm'),
+//                    'Main-Class': 'com.gmail.eksuzyan.pavel.education.market.config.Main',
+                    "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
             )
         }
     }

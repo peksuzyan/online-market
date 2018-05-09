@@ -1,7 +1,9 @@
 ext {
     jaxbVersion = '2.3.0'
+    commonsIoVersion = '2.6'
 }
 
 dependencies {
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: jaxbVersion
+    compile group: 'commons-io', name: 'commons-io', version: commonsIoVersion
 }
