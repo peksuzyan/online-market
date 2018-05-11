@@ -1,13 +1,12 @@
 package com.gmail.eksuzyan.pavel.education.market.config.worker.file;
 
 import com.gmail.eksuzyan.pavel.education.market.config.Configuration;
-import com.gmail.eksuzyan.pavel.education.market.config.Settings;
+import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
 import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummyConfiguration;
 import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummySettings;
 import com.gmail.eksuzyan.pavel.education.market.config.marshaller.jaxb.JaxbMarshallizer;
 import com.gmail.eksuzyan.pavel.education.market.config.storage.file.mocks.MockStorage;
 import com.gmail.eksuzyan.pavel.education.market.config.worker.file.mocks.MockConfiguration;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

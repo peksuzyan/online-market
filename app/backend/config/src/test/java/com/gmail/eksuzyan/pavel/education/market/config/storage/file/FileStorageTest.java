@@ -1,6 +1,6 @@
 package com.gmail.eksuzyan.pavel.education.market.config.storage.file;
 
-import com.gmail.eksuzyan.pavel.education.market.config.Settings;
+import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
 import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummySettings;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;

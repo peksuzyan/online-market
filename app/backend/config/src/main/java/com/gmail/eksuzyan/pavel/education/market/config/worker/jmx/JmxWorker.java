@@ -1,9 +1,9 @@
 package com.gmail.eksuzyan.pavel.education.market.config.worker.jmx;
 
 import com.gmail.eksuzyan.pavel.education.market.config.Configuration;
-import com.gmail.eksuzyan.pavel.education.market.config.Settings;
 import com.gmail.eksuzyan.pavel.education.market.config.marshaller.Marshallizer;
 import com.gmail.eksuzyan.pavel.education.market.config.subscriber.restartable.RestartableSubscriber;
+import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
 import com.gmail.eksuzyan.pavel.education.market.config.worker.Worker;
 import com.gmail.eksuzyan.pavel.education.market.config.worker.jmx.mbean.JmxProperties;
 import org.slf4j.Logger;
@@ -15,8 +15,9 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Objects;
 
-import static com.gmail.eksuzyan.pavel.education.market.config.Settings.STORAGE_ENCODING;
-import static com.gmail.eksuzyan.pavel.education.market.config.worker.Worker.State.*;
+import static com.gmail.eksuzyan.pavel.education.market.config.util.Settings.STORAGE_ENCODING;
+import static com.gmail.eksuzyan.pavel.education.market.config.worker.Worker.State.RUNNING;
+import static com.gmail.eksuzyan.pavel.education.market.config.worker.Worker.State.STOPPED;
 
 /**
  * Provides an interface to manage the configuration via JMX.

@@ -1,36 +1,29 @@
 package com.gmail.eksuzyan.pavel.education.market.config.creator.factory;
 
 import com.gmail.eksuzyan.pavel.education.market.config.Configuration;
-import com.gmail.eksuzyan.pavel.education.market.config.Settings;
 import com.gmail.eksuzyan.pavel.education.market.config.creator.ConfigurationFactory;
-import com.gmail.eksuzyan.pavel.education.market.config.facade.ConfigurationSettingsFacade;
 
 import java.util.Properties;
 
 public abstract class SingletonConfigurationFactory implements ConfigurationFactory {
 
-    private ConfigurationSettingsFacade instance;
+    private Configuration instance;
 
     @Override
     public final Configuration getConfiguration(Properties props) {
         return getInstance(props);
     }
 
-    @Override
-    public final Settings getSettings(Properties props) {
-        return getInstance(props);
-    }
-
-    private ConfigurationSettingsFacade getInstance(Properties props) {
+    private Configuration getInstance(Properties props) {
         if (instance == null)
             synchronized (this) {
                 if (instance == null)
-                    instance = newSettingsConfigurationFacade(props);
+                    instance = newConfiguration(props);
             }
 
         return instance;
     }
 
-    protected abstract ConfigurationSettingsFacade newSettingsConfigurationFacade(Properties props);
+    protected abstract Configuration newConfiguration(Properties props);
 
 }

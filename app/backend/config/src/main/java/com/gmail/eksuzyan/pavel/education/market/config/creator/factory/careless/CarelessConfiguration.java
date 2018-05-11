@@ -6,7 +6,7 @@ import java.util.Properties;
 
 public class CarelessConfiguration extends AbstractConfiguration {
 
-    public CarelessConfiguration(Properties defaultProps) {
+    CarelessConfiguration(Properties defaultProps) {
         super(defaultProps);
     }
 

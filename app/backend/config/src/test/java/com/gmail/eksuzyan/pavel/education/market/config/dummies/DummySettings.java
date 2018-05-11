@@ -1,6 +1,6 @@
 package com.gmail.eksuzyan.pavel.education.market.config.dummies;
 
-import com.gmail.eksuzyan.pavel.education.market.config.Settings;
+import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
 
 public class DummySettings implements Settings {
 

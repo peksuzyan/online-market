@@ -1,7 +1,7 @@
 package com.gmail.eksuzyan.pavel.education.market.config.storage.file;
 
-import com.gmail.eksuzyan.pavel.education.market.config.Settings;
 import com.gmail.eksuzyan.pavel.education.market.config.storage.Storage;
+import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

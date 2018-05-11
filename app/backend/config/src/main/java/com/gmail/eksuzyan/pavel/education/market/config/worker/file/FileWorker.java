@@ -1,10 +1,10 @@
 package com.gmail.eksuzyan.pavel.education.market.config.worker.file;
 
 import com.gmail.eksuzyan.pavel.education.market.config.Configuration;
-import com.gmail.eksuzyan.pavel.education.market.config.Settings;
 import com.gmail.eksuzyan.pavel.education.market.config.marshaller.Marshallizer;
 import com.gmail.eksuzyan.pavel.education.market.config.storage.Storage;
 import com.gmail.eksuzyan.pavel.education.market.config.subscriber.restartable.RestartableSubscriber;
+import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
 import com.gmail.eksuzyan.pavel.education.market.config.worker.Worker;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -24,8 +24,9 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.gmail.eksuzyan.pavel.education.market.config.Settings.*;
-import static com.gmail.eksuzyan.pavel.education.market.config.worker.Worker.State.*;
+import static com.gmail.eksuzyan.pavel.education.market.config.util.Settings.*;
+import static com.gmail.eksuzyan.pavel.education.market.config.worker.Worker.State.RUNNING;
+import static com.gmail.eksuzyan.pavel.education.market.config.worker.Worker.State.STOPPED;
 
 /**
  * Provides background process for storage management.

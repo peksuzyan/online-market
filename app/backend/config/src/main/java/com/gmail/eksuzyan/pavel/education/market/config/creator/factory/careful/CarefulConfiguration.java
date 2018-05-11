@@ -12,7 +12,7 @@ public class CarefulConfiguration extends AbstractConfiguration implements Manag
 
     private final Set<Worker> workers = new HashSet<>();
 
-    public CarefulConfiguration(Properties defaultProps) {
+    CarefulConfiguration(Properties defaultProps) {
         super(defaultProps);
     }
 

@@ -26,7 +26,7 @@ public abstract class AbstractConfiguration implements Configuration {
     public AbstractConfiguration(Properties defaultProps) {
         requireNonNull(defaultProps);
 
-        this.defaultProps.putAll(defaultProps);
+        addDefaults(defaultProps);
 
         LOG.info("Configuration initialized. ");
     }
@@ -36,27 +36,55 @@ public abstract class AbstractConfiguration implements Configuration {
     protected abstract void releaseResources();
 
     @Override
+    public void addDefaults(Properties props) {
+        lock.writeLock().lock();
+        try {
+            this.defaultProps.putAll(props);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    @Override
     public boolean subscribe(Subscriber subscriber) {
-        return subscribers.add(subscriber);
+        lock.writeLock().lock();
+        try {
+            return subscribers.add(subscriber);
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     @Override
     public boolean unsubscribe(Subscriber subscriber) {
-        return subscribers.remove(subscriber);
+        lock.writeLock().lock();
+        try {
+            return subscribers.remove(subscriber);
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     public void start() {
-        initProps();
-
-        requestResources();
+        lock.writeLock().lock();
+        try {
+            initProps();
+            requestResources();
+        } finally {
+            lock.writeLock().unlock();
+        }
 
         LOG.info("Configuration started. ");
     }
 
     public void stop() {
-        releaseResources();
-
-        clear();
+        lock.writeLock().lock();
+        try {
+            releaseResources();
+            clear();
+        } finally {
+            lock.writeLock().unlock();
+        }
 
         LOG.info("Configuration stopped. ");
     }
@@ -108,8 +136,14 @@ public abstract class AbstractConfiguration implements Configuration {
             lock.writeLock().unlock();
         }
 
-        if (!Objects.equals(value, newValue))
-            notifyListeners(String.valueOf(key));
+        if (!Objects.equals(value, newValue)) {
+            lock.readLock().lock();
+            try {
+                notifyListeners(String.valueOf(key));
+            } finally {
+                lock.readLock().unlock();
+            }
+        }
     }
 
     private void notifyListeners(String property) {
@@ -120,21 +154,20 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public Properties getProperties() {
-        Properties props = new Properties();
-        props.putAll(getPrintableMap());
-        return props;
-    }
-
-    private Map<Object, Object> getPrintableMap() {
         lock.readLock().lock();
         try {
-            return runtimeProps.entrySet().stream()
-                    .filter(entry -> !defaultProps.containsKey(entry.getKey()))
-                    .filter(entry -> !systemProps.containsKey(entry.getKey()))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            Properties props = new Properties();
+            props.putAll(getPrintableMap());
+            return props;
         } finally {
             lock.readLock().unlock();
         }
+    }
+
+    private Map<Object, Object> getPrintableMap() {
+        return runtimeProps.entrySet().stream()
+                .filter(entry -> !systemProps.containsKey(entry.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
 }
