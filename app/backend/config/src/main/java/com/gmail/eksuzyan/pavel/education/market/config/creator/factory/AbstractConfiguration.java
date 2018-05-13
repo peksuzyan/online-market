@@ -81,7 +81,6 @@ public abstract class AbstractConfiguration implements Configuration {
         lock.writeLock().lock();
         try {
             releaseResources();
-            clear();
         } finally {
             lock.writeLock().unlock();
         }
