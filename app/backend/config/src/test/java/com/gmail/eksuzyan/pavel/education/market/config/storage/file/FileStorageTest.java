@@ -1,5 +1,6 @@
 package com.gmail.eksuzyan.pavel.education.market.config.storage.file;
 
+import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummyConfiguration;
 import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
 import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummySettings;
 import org.apache.commons.io.IOUtils;
@@ -21,7 +22,7 @@ public class FileStorageTest {
     private static final Path DEFAULT_FILE_PATH = Paths.get(DEFAULT_FILE_NAME);
     private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
-    private static final Settings SETTINGS = new DummySettings() {
+    private static final Settings SETTINGS = new DummySettings(new DummyConfiguration()) {
         @Override
         public String getStorageName() {
             return DEFAULT_FILE_NAME;

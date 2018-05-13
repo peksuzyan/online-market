@@ -102,7 +102,6 @@ public class JmxWorker extends RestartableSubscriber implements Worker {
         start();
     }
 
-
     /**
      * Starts worker's resources. Operation is thread-safe.
      *

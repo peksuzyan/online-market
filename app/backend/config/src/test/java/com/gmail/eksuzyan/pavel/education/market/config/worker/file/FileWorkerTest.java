@@ -20,7 +20,10 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class FileWorkerTest {
@@ -84,7 +87,7 @@ public class FileWorkerTest {
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullConfigurationArg() {
-        new FileWorker(null, new DummySettings(), new JaxbMarshallizer(), new MockStorage());
+        new FileWorker(null, new DummySettings(new DummyConfiguration()), new JaxbMarshallizer(), new MockStorage());
     }
 
     @Test(expected = NullPointerException.class)
@@ -94,12 +97,12 @@ public class FileWorkerTest {
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullMarshallizerArg() {
-        new FileWorker(new DummyConfiguration(), new DummySettings(), null, new MockStorage());
+        new FileWorker(new DummyConfiguration(), new DummySettings(new DummyConfiguration()), null, new MockStorage());
     }
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullStorageArg() {
-        new FileWorker(new DummyConfiguration(), new DummySettings(), new JaxbMarshallizer(), null);
+        new FileWorker(new DummyConfiguration(), new DummySettings(new DummyConfiguration()), new JaxbMarshallizer(), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -320,4 +323,59 @@ public class FileWorkerTest {
         worker.restart();
     }
 
+    @Test
+    public void testSubscribedPos1() {
+        worker = new FileWorker(
+                configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
+
+        boolean result = worker.subscribed(Settings.STORAGE_ENCODING);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void testSubscribedPos2() {
+        worker = new FileWorker(
+                configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
+
+        boolean result = worker.subscribed(Settings.STORAGE_RELOAD_DELAY);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void testSubscribedPos3() {
+        worker = new FileWorker(
+                configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
+
+        boolean result = worker.subscribed(Settings.STORAGE_RELOAD_PERIOD);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void testSubscribedNeg() {
+        worker = new FileWorker(
+                configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
+
+        boolean result = worker.subscribed(Settings.STORAGE_SAVE_ON_EXIT);
+
+        assertFalse(result);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNotifySubscriberPos() {
+        worker = new FileWorker(
+                configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
+
+        when(settings.getStorageEncoding()).thenReturn("UTF-8");
+        when(settings.getStorageReloadDelay()).thenReturn(0);
+        when(settings.getStorageReloadPeriod()).thenReturn(30);
+
+        worker.start();
+
+        when(settings.getStorageReloadDelay()).thenReturn(-1);
+
+        worker.notifySubscriber();
+    }
 }

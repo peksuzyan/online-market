@@ -1,8 +1,13 @@
 package com.gmail.eksuzyan.pavel.education.market.config.dummies;
 
+import com.gmail.eksuzyan.pavel.education.market.config.Configuration;
 import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
 
-public class DummySettings implements Settings {
+public class DummySettings extends Settings {
+
+    public DummySettings(Configuration configuration) {
+        super(configuration);
+    }
 
     @Override
     public String getStorageName() {

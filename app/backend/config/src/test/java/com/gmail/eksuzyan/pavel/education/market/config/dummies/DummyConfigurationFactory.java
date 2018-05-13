@@ -13,8 +13,4 @@ public class DummyConfigurationFactory implements ConfigurationFactory {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public Settings getSettings(Properties props) {
-        throw new UnsupportedOperationException();
-    }
 }

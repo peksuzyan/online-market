@@ -26,6 +26,7 @@ public abstract class AbstractConfiguration implements Configuration {
     public AbstractConfiguration(Properties defaultProps) {
         requireNonNull(defaultProps);
 
+        initProps();
         addDefaults(defaultProps);
 
         LOG.info("Configuration initialized. ");
@@ -68,7 +69,6 @@ public abstract class AbstractConfiguration implements Configuration {
     public void start() {
         lock.writeLock().lock();
         try {
-            initProps();
             requestResources();
         } finally {
             lock.writeLock().unlock();
@@ -157,15 +157,33 @@ public abstract class AbstractConfiguration implements Configuration {
         lock.readLock().lock();
         try {
             Properties props = new Properties();
-            props.putAll(getPrintableMap());
+            props.putAll(getPrintablePropsMap());
             return props;
         } finally {
             lock.readLock().unlock();
         }
     }
 
-    private Map<Object, Object> getPrintableMap() {
-        return runtimeProps.entrySet().stream()
+    /**
+     * Returns properties map of all non-system properties.
+     * Runtime properties has more privilege than default ones.
+     *
+     * @return properties map of all non-system properties
+     */
+    private Map<Object, Object> getPrintablePropsMap() {
+        Map<Object, Object> defaults = getNonSystemPropsMap(defaultProps);
+        defaults.putAll(getNonSystemPropsMap(runtimeProps));
+        return defaults;
+    }
+
+    /**
+     * Returns properties map of the given properties except whose are't present among system properties.
+     *
+     * @param props properties
+     * @return properties map without presented into system properties
+     */
+    private Map<Object, Object> getNonSystemPropsMap(Properties props) {
+        return props.entrySet().stream()
                 .filter(entry -> !systemProps.containsKey(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }

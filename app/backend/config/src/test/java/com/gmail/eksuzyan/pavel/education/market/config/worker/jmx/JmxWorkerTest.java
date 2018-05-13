@@ -1,15 +1,17 @@
 package com.gmail.eksuzyan.pavel.education.market.config.worker.jmx;
 
 import com.gmail.eksuzyan.pavel.education.market.config.Configuration;
-import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
 import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummyConfiguration;
 import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummySettings;
 import com.gmail.eksuzyan.pavel.education.market.config.marshaller.jaxb.JaxbMarshallizer;
+import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class JmxWorkerTest {
@@ -29,7 +31,7 @@ public class JmxWorkerTest {
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullConfigurationArg() {
-        new JmxWorker(null, new DummySettings(), new JaxbMarshallizer());
+        new JmxWorker(null, new DummySettings(new DummyConfiguration()), new JaxbMarshallizer());
     }
 
     @Test(expected = NullPointerException.class)
@@ -39,9 +41,9 @@ public class JmxWorkerTest {
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullMarshallizerArg() {
-        new JmxWorker(new DummyConfiguration(), new DummySettings(), null);
+        new JmxWorker(new DummyConfiguration(), new DummySettings(new DummyConfiguration()), null);
     }
-    
+
     @Test(expected = IllegalStateException.class)
     public void testStartExTwice() {
         when(settings.getStorageEncoding()).thenReturn("UTF-8");
@@ -150,5 +152,34 @@ public class JmxWorkerTest {
         worker2.stop();
     }
 
+    @Test
+    public void testSubscribedPos() {
+        worker = new JmxWorker(configuration, settings, new JaxbMarshallizer());
 
+        boolean result = worker.subscribed(Settings.STORAGE_ENCODING);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void testSubscribedNeg() {
+        worker = new JmxWorker(configuration, settings, new JaxbMarshallizer());
+
+        boolean result = worker.subscribed(Settings.STORAGE_NAME);
+
+        assertFalse(result);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testNotifySubscriberPos() {
+        worker = new JmxWorker(configuration, settings, new JaxbMarshallizer());
+
+        when(settings.getStorageEncoding()).thenReturn("UTF-8");
+
+        worker.start();
+
+        when(settings.getStorageEncoding()).thenReturn("wrong_encoding");
+
+        worker.notifySubscriber();
+    }
 }

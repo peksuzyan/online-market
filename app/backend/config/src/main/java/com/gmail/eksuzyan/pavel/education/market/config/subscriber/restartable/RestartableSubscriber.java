@@ -20,6 +20,7 @@ public abstract class RestartableSubscriber implements Subscriber {
      * Single constructor.
      *
      * @param subscriptions subscriptions
+     * @throws NullPointerException if arg is null
      */
     public RestartableSubscriber(Collection<String> subscriptions) {
         this.subscriptions = unmodifiableCollection(subscriptions);

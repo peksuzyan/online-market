@@ -41,4 +41,9 @@ public class DummyConfiguration implements Configuration {
     public boolean unsubscribe(Subscriber subscriber) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public void addDefaults(Properties props) {
+        throw new UnsupportedOperationException();
+    }
 }

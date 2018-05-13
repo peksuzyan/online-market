@@ -5,24 +5,24 @@ import com.gmail.eksuzyan.pavel.education.market.config.Configuration;
 import java.util.Objects;
 import java.util.Properties;
 
-public class Settings {
+public class Settings extends Properties {
 
-    private static final String STORAGE_NAME = "com.gmail.eksuzyan.pavel.market.config.storage.name";
-    private static final String STORAGE_ENCODING = "com.gmail.eksuzyan.pavel.market.config.storage.encoding";
-    private static final String STORAGE_RELOAD_PERIOD = "com.gmail.eksuzyan.pavel.market.config.storage.reload.period";
-    private static final String STORAGE_RELOAD_DELAY = "com.gmail.eksuzyan.pavel.market.config.storage.reload.delay";
-    private static final String STORAGE_SAVE_ON_EXIT = "com.gmail.eksuzyan.pavel.market.config.storage.save.on.exit";
+    public static final String STORAGE_NAME = "com.gmail.eksuzyan.pavel.market.config.storage.name";
+    public static final String STORAGE_ENCODING = "com.gmail.eksuzyan.pavel.market.config.storage.encoding";
+    public static final String STORAGE_RELOAD_PERIOD = "com.gmail.eksuzyan.pavel.market.config.storage.reload.period";
+    public static final String STORAGE_RELOAD_DELAY = "com.gmail.eksuzyan.pavel.market.config.storage.reload.delay";
+    public static final String STORAGE_SAVE_ON_EXIT = "com.gmail.eksuzyan.pavel.market.config.storage.save.on.exit";
 
     private final Configuration configuration;
 
     public Settings(Configuration configuration) {
         this.configuration = Objects.requireNonNull(configuration);
 
-        this.configuration.addDefaults(new Properties() {{
-            put(STORAGE_NAME, "config.xml");
-            put(STORAGE_RELOAD_PERIOD, 30);
-            put(STORAGE_RELOAD_DELAY, 0);
-        }});
+        put(STORAGE_NAME, "config.xml");
+        put(STORAGE_RELOAD_PERIOD, 30);
+        put(STORAGE_RELOAD_DELAY, 0);
+
+        this.configuration.addDefaults(this);
     }
 
     public String getStorageName() {
