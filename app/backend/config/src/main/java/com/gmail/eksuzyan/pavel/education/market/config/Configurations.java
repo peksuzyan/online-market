@@ -1,19 +1,15 @@
 package com.gmail.eksuzyan.pavel.education.market.config;
 
 import com.gmail.eksuzyan.pavel.education.market.config.creator.ConfigurationFactory;
-import com.gmail.eksuzyan.pavel.education.market.config.creator.factory.careful.CarefulConfigurationFactory;
-import com.gmail.eksuzyan.pavel.education.market.config.creator.factory.careless.CarelessConfigurationFactory;
+import com.gmail.eksuzyan.pavel.education.market.config.creator.factory.SingletonConfigurationFactory;
 
 public final class Configurations {
 
     private Configurations() {
     }
 
-    public static ConfigurationFactory newCarefulConfigurationFactory() {
-        return new CarefulConfigurationFactory();
+    public static ConfigurationFactory newSingleConfigurationFactory() {
+        return new SingletonConfigurationFactory();
     }
 
-    public static ConfigurationFactory newCarelessConfigurationFactory() {
-        return new CarelessConfigurationFactory();
-    }
 }

@@ -1,4 +1,4 @@
-package com.gmail.eksuzyan.pavel.education.market.config.creator.factory.careless;
+package com.gmail.eksuzyan.pavel.education.market.config.creator.factory;
 
 import com.gmail.eksuzyan.pavel.education.market.config.subscriber.Subscriber;
 import org.junit.Before;

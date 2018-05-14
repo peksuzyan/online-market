@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class AbstractConfiguration implements Configuration {
+public class CarelessConfiguration implements Configuration {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractConfiguration.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CarelessConfiguration.class);
 
     private final Properties systemProps = new Properties();
     private final Properties defaultProps = new Properties();
@@ -23,7 +23,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     private final Set<Subscriber> subscribers = new HashSet<>();
 
-    public AbstractConfiguration(Properties defaultProps) {
+    CarelessConfiguration(Properties defaultProps) {
         requireNonNull(defaultProps);
 
         initProps();
@@ -32,9 +32,9 @@ public abstract class AbstractConfiguration implements Configuration {
         LOG.info("Configuration initialized. ");
     }
 
-    protected abstract void requestResources();
-
-    protected abstract void releaseResources();
+    private void initProps() {
+        systemProps.putAll(System.getProperties());
+    }
 
     @Override
     public void addDefaults(Properties props) {
@@ -64,32 +64,6 @@ public abstract class AbstractConfiguration implements Configuration {
         } finally {
             lock.writeLock().unlock();
         }
-    }
-
-    public void start() {
-        lock.writeLock().lock();
-        try {
-            requestResources();
-        } finally {
-            lock.writeLock().unlock();
-        }
-
-        LOG.info("Configuration started. ");
-    }
-
-    public void stop() {
-        lock.writeLock().lock();
-        try {
-            releaseResources();
-        } finally {
-            lock.writeLock().unlock();
-        }
-
-        LOG.info("Configuration stopped. ");
-    }
-
-    private void initProps() {
-        systemProps.putAll(System.getProperties());
     }
 
     @Override
