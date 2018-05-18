@@ -1,12 +1,12 @@
 package com.gmail.eksuzyan.pavel.education.market.config.storage.file;
 
-import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummyConfiguration;
 import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
-import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummySettings;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +15,7 @@ import java.nio.charset.Charset;
 import java.nio.file.*;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 public class FileStorageTest {
 
@@ -22,12 +23,8 @@ public class FileStorageTest {
     private static final Path DEFAULT_FILE_PATH = Paths.get(DEFAULT_FILE_NAME);
     private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
-    private static final Settings SETTINGS = new DummySettings(new DummyConfiguration()) {
-        @Override
-        public String getStorageName() {
-            return DEFAULT_FILE_NAME;
-        }
-    };
+    @Mock
+    private Settings settings;
 
     private static final String CONTENT =
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
@@ -41,6 +38,8 @@ public class FileStorageTest {
 
     @Before
     public void setUp() throws IOException {
+        MockitoAnnotations.initMocks(this);
+
         Files.deleteIfExists(DEFAULT_FILE_PATH);
     }
 
@@ -56,7 +55,8 @@ public class FileStorageTest {
 
     @Test
     public void testCreateInputStream() throws IOException {
-        FileStorage storage = new FileStorage(SETTINGS);
+        when(settings.getStorageName()).thenReturn(DEFAULT_FILE_NAME);
+        FileStorage storage = new FileStorage(settings);
 
         Files.write(DEFAULT_FILE_PATH, CONTENT.getBytes(DEFAULT_CHARSET), StandardOpenOption.CREATE);
 
@@ -70,14 +70,16 @@ public class FileStorageTest {
 
     @Test(expected = NoSuchFileException.class)
     public void testCreateInputStreamExNoSuchFile() throws IOException {
-        FileStorage storage = new FileStorage(SETTINGS);
+        when(settings.getStorageName()).thenReturn(DEFAULT_FILE_NAME);
+        FileStorage storage = new FileStorage(settings);
 
         storage.createInputStream();
     }
 
     @Test
     public void testCreateOutputStream() throws IOException {
-        FileStorage storage = new FileStorage(SETTINGS);
+        when(settings.getStorageName()).thenReturn(DEFAULT_FILE_NAME);
+        FileStorage storage = new FileStorage(settings);
 
         try (OutputStream outputStream = storage.createOutputStream()) {
             IOUtils.write(CONTENT, outputStream, DEFAULT_CHARSET);
@@ -90,7 +92,8 @@ public class FileStorageTest {
 
     @Test(expected = FileAlreadyExistsException.class)
     public void testCreateOutputStreamExFileAlreadyExists() throws IOException {
-        FileStorage storage = new FileStorage(SETTINGS);
+        when(settings.getStorageName()).thenReturn(DEFAULT_FILE_NAME);
+        FileStorage storage = new FileStorage(settings);
 
         Files.write(DEFAULT_FILE_PATH, CONTENT.getBytes(DEFAULT_CHARSET), StandardOpenOption.CREATE);
 
@@ -99,7 +102,8 @@ public class FileStorageTest {
 
     @Test
     public void testAvailablePos() throws IOException {
-        FileStorage storage = new FileStorage(SETTINGS);
+        when(settings.getStorageName()).thenReturn(DEFAULT_FILE_NAME);
+        FileStorage storage = new FileStorage(settings);
 
         Files.write(DEFAULT_FILE_PATH, CONTENT.getBytes(DEFAULT_CHARSET), StandardOpenOption.CREATE);
 
@@ -108,7 +112,8 @@ public class FileStorageTest {
 
     @Test
     public void testAvailableNeg() throws IOException {
-        FileStorage storage = new FileStorage(SETTINGS);
+        when(settings.getStorageName()).thenReturn(DEFAULT_FILE_NAME);
+        FileStorage storage = new FileStorage(settings);
 
         Files.deleteIfExists(DEFAULT_FILE_PATH);
 

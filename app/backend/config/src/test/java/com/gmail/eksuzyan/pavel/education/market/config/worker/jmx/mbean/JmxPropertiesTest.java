@@ -1,7 +1,6 @@
 package com.gmail.eksuzyan.pavel.education.market.config.worker.jmx.mbean;
 
 import com.gmail.eksuzyan.pavel.education.market.config.Configuration;
-import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummyConfiguration;
 import com.gmail.eksuzyan.pavel.education.market.config.marshaller.jaxb.JaxbMarshallizer;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,12 +80,12 @@ public class JmxPropertiesTest {
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullMarshallizerArg() {
-        new JmxProperties(new DummyConfiguration(), null, DEFAULT_CHARSET);
+        new JmxProperties(configuration, null, DEFAULT_CHARSET);
     }
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullCharsetArg() {
-        new JmxProperties(new DummyConfiguration(), new JaxbMarshallizer(), null);
+        new JmxProperties(configuration, new JaxbMarshallizer(), null);
     }
 
     @Test

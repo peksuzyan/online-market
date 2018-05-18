@@ -1,11 +1,10 @@
 package com.gmail.eksuzyan.pavel.education.market.config.worker.file;
 
 import com.gmail.eksuzyan.pavel.education.market.config.Configuration;
-import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
-import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummyConfiguration;
 import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummySettings;
 import com.gmail.eksuzyan.pavel.education.market.config.marshaller.jaxb.JaxbMarshallizer;
 import com.gmail.eksuzyan.pavel.education.market.config.storage.file.mocks.MockStorage;
+import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
 import com.gmail.eksuzyan.pavel.education.market.config.worker.file.mocks.MockConfiguration;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,11 +18,9 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 public class FileWorkerTest {
@@ -87,22 +84,25 @@ public class FileWorkerTest {
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullConfigurationArg() {
-        new FileWorker(null, new DummySettings(new DummyConfiguration()), new JaxbMarshallizer(), new MockStorage());
+        doNothing().when(configuration).addDefaults(any());
+        new FileWorker(null, new DummySettings(configuration), new JaxbMarshallizer(), new MockStorage());
     }
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullSettingsArg() {
-        new FileWorker(new DummyConfiguration(), null, new JaxbMarshallizer(), new MockStorage());
+        new FileWorker(configuration, null, new JaxbMarshallizer(), new MockStorage());
     }
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullMarshallizerArg() {
-        new FileWorker(new DummyConfiguration(), new DummySettings(new DummyConfiguration()), null, new MockStorage());
+        doNothing().when(configuration).addDefaults(any());
+        new FileWorker(configuration, new DummySettings(configuration), null, new MockStorage());
     }
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullStorageArg() {
-        new FileWorker(new DummyConfiguration(), new DummySettings(new DummyConfiguration()), new JaxbMarshallizer(), null);
+        doNothing().when(configuration).addDefaults(any());
+        new FileWorker(configuration, new DummySettings(configuration), new JaxbMarshallizer(), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -111,7 +111,7 @@ public class FileWorkerTest {
         when(settings.getStorageReloadPeriod()).thenReturn(0);
 
         worker = new FileWorker(
-                new DummyConfiguration(), settings, new JaxbMarshallizer(), new MockStorage());
+                configuration, settings, new JaxbMarshallizer(), new MockStorage());
 
         worker.start();
     }
@@ -122,7 +122,7 @@ public class FileWorkerTest {
         when(settings.getStorageReloadPeriod()).thenReturn(-1);
 
         worker = new FileWorker(
-                new DummyConfiguration(), settings, new JaxbMarshallizer(), new MockStorage());
+                configuration, settings, new JaxbMarshallizer(), new MockStorage());
 
         worker.start();
     }
@@ -134,7 +134,7 @@ public class FileWorkerTest {
         when(settings.getStorageReloadDelay()).thenReturn(-1);
 
         worker = new FileWorker(
-                new DummyConfiguration(), settings, new JaxbMarshallizer(), new MockStorage());
+                configuration, settings, new JaxbMarshallizer(), new MockStorage());
 
         worker.start();
     }

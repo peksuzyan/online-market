@@ -51,6 +51,9 @@ public final class SingletonConfigurationFactory implements ConfigurationFactory
         configuration.subscribe(jmxWorker);
         configuration.subscribe(fileWorker);
 
+        jmxWorker.start();
+        fileWorker.start();
+
         return configuration;
     }
 

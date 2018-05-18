@@ -1,7 +1,6 @@
 package com.gmail.eksuzyan.pavel.education.market.config.worker.jmx;
 
 import com.gmail.eksuzyan.pavel.education.market.config.Configuration;
-import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummyConfiguration;
 import com.gmail.eksuzyan.pavel.education.market.config.dummies.DummySettings;
 import com.gmail.eksuzyan.pavel.education.market.config.marshaller.jaxb.JaxbMarshallizer;
 import com.gmail.eksuzyan.pavel.education.market.config.util.Settings;
@@ -12,6 +11,8 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 public class JmxWorkerTest {
@@ -31,17 +32,19 @@ public class JmxWorkerTest {
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullConfigurationArg() {
-        new JmxWorker(null, new DummySettings(new DummyConfiguration()), new JaxbMarshallizer());
+        doNothing().when(configuration).addDefaults(any());
+        new JmxWorker(null, new DummySettings(configuration), new JaxbMarshallizer());
     }
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullSettingsArg() {
-        new JmxWorker(new DummyConfiguration(), null, new JaxbMarshallizer());
+        new JmxWorker(configuration, null, new JaxbMarshallizer());
     }
 
     @Test(expected = NullPointerException.class)
     public void testConstructorExNullMarshallizerArg() {
-        new JmxWorker(new DummyConfiguration(), new DummySettings(new DummyConfiguration()), null);
+        doNothing().when(configuration).addDefaults(any());
+        new JmxWorker(configuration, new DummySettings(configuration), null);
     }
 
     @Test(expected = IllegalStateException.class)
