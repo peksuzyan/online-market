@@ -17,7 +17,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 /**
- * Marshals and unmarshals configuration util forward and backward using JAXB context.
+ * Marshals and unmarshals configuration properties forward and backward using JAXB context.
  */
 public class JaxbMarshallizer implements Marshallizer {
 
@@ -40,12 +40,12 @@ public class JaxbMarshallizer implements Marshallizer {
     }
 
     /**
-     * Marshals a util object into an output stream.
+     * Marshals a properties object into an output stream.
      *
-     * @param properties   util
+     * @param properties   properties
      * @param outputStream outputStream
-     * @throws NullPointerException     if util or outputStream is null
-     * @throws IllegalArgumentException if util couldn't be marshalled into outputStream
+     * @throws NullPointerException     if properties or outputStream is null
+     * @throws IllegalArgumentException if properties couldn't be marshalled into outputStream
      */
     @Override
     public void marshall(Properties properties, OutputStream outputStream) {
@@ -64,10 +64,10 @@ public class JaxbMarshallizer implements Marshallizer {
     }
 
     /**
-     * Casts configuration util into JAXB-mapped util object.
+     * Casts configuration properties into JAXB-mapped util object.
      *
-     * @param properties configuration util
-     * @return JAXB-mapped util object
+     * @param properties properties
+     * @return JAXB-mapped properties object
      */
     private static PropertySet cast(Properties properties) {
         return properties.entrySet().stream()
@@ -76,12 +76,12 @@ public class JaxbMarshallizer implements Marshallizer {
     }
 
     /**
-     * Unmarshals a util object from an input stream.
+     * Unmarshals a properties object from an input stream.
      *
      * @param inputStream inputStream
      * @return util
      * @throws NullPointerException     if inputStream is null
-     * @throws IllegalArgumentException if util couldn't be unmarshalled from inputStream
+     * @throws IllegalArgumentException if properties couldn't be unmarshalled from inputStream
      */
     @Override
     public Properties unmarshall(InputStream inputStream) {
@@ -97,10 +97,10 @@ public class JaxbMarshallizer implements Marshallizer {
     }
 
     /**
-     * Recasts configuration util from JAXB-mapped util object.
+     * Recasts configuration properties from JAXB-mapped util object.
      *
-     * @param propertySet JAXB-mapped util object
-     * @return configuration util
+     * @param propertySet JAXB-mapped properties object
+     * @return properties
      */
     private static Properties recast(PropertySet propertySet) {
         Properties properties = new Properties();
