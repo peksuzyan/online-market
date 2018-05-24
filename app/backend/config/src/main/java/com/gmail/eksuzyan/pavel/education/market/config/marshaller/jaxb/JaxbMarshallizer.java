@@ -49,7 +49,7 @@ public class JaxbMarshallizer implements Marshallizer {
      */
     @Override
     public void marshall(Properties properties, OutputStream outputStream) {
-        Objects.requireNonNull(properties, "util must not be null");
+        Objects.requireNonNull(properties, "properties must not be null");
         Objects.requireNonNull(outputStream, "outputStream must not be null");
         try {
             Marshaller marshaller = context.createMarshaller();
@@ -64,7 +64,7 @@ public class JaxbMarshallizer implements Marshallizer {
     }
 
     /**
-     * Casts configuration properties into JAXB-mapped util object.
+     * Casts configuration properties into JAXB-mapped properties object.
      *
      * @param properties properties
      * @return JAXB-mapped properties object
@@ -97,7 +97,7 @@ public class JaxbMarshallizer implements Marshallizer {
     }
 
     /**
-     * Recasts configuration properties from JAXB-mapped util object.
+     * Recasts configuration properties from JAXB-mapped properties object.
      *
      * @param propertySet JAXB-mapped properties object
      * @return properties

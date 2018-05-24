@@ -141,6 +141,11 @@ public class FileWorker extends RestartableSubscriber implements Worker {
         if (delay < 0)
             throw new IllegalArgumentException("Storage initial reload delay is negative. ");
 
+        if (delay == 0) {
+            refresh();
+            delay = period;
+        }
+
         executor = Executors.newSingleThreadScheduledExecutor(THREAD_FACTORY);
 
         executor.scheduleWithFixedDelay(this::refresh, delay, period, TimeUnit.SECONDS);
@@ -151,7 +156,7 @@ public class FileWorker extends RestartableSubscriber implements Worker {
     }
 
     /**
-     * Refreshes runtime util or storage config based on the storage availability.
+     * Refreshes runtime properties or storage config based on the storage availability.
      */
     private void refresh() {
         if (storage.available())
@@ -161,7 +166,7 @@ public class FileWorker extends RestartableSubscriber implements Worker {
     }
 
     /**
-     * Updates runtime util from the storage if it's been modified.
+     * Updates runtime properties from the storage if it's been modified.
      */
     private void updateRuntime() {
         String newContent = getCurrentConfig();
@@ -173,7 +178,7 @@ public class FileWorker extends RestartableSubscriber implements Worker {
     }
 
     /**
-     * Returns config util from storage in string format.
+     * Returns config properties from storage in string format.
      *
      * @return string representation
      */
@@ -187,7 +192,7 @@ public class FileWorker extends RestartableSubscriber implements Worker {
     }
 
     /**
-     * Updates runtime util from the storage.
+     * Updates runtime properties from the storage.
      */
     private void updateCurrentConfig() {
         try (InputStream is = storage.createInputStream()) {
@@ -200,7 +205,7 @@ public class FileWorker extends RestartableSubscriber implements Worker {
     }
 
     /**
-     * Updates config storage by runtime util.
+     * Updates config storage by runtime properties.
      */
     private void updateStorage() {
         Properties actualProps = configuration.getProperties();

@@ -18,15 +18,14 @@ public class Settings extends Properties {
     public Settings(Configuration configuration) {
         this.configuration = Objects.requireNonNull(configuration);
 
-        put(STORAGE_NAME, "config.xml");
-        put(STORAGE_RELOAD_PERIOD, 30);
-        put(STORAGE_RELOAD_DELAY, 0);
+        put(STORAGE_RELOAD_PERIOD, String.valueOf(30));
+        put(STORAGE_RELOAD_DELAY, String.valueOf(0));
 
         this.configuration.addDefaults(this);
     }
 
     public String getStorageName() {
-        return configuration.getStringProperty(STORAGE_NAME);
+        return configuration.getStringProperty(STORAGE_NAME, "config.xml");
     }
 
     public String getStorageEncoding() {

@@ -48,11 +48,11 @@ public final class SingletonConfigurationFactory implements ConfigurationFactory
         jmxWorker = new JmxWorker(configuration, settings, jaxbMarshallizer);
         fileWorker = new FileWorker(configuration, settings, jaxbMarshallizer, fileStorage);
 
-        configuration.subscribe(jmxWorker);
-        configuration.subscribe(fileWorker);
-
         jmxWorker.start();
         fileWorker.start();
+
+        configuration.subscribe(jmxWorker);
+        configuration.subscribe(fileWorker);
 
         return configuration;
     }

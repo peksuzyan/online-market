@@ -71,8 +71,10 @@ public interface Configuration extends Publisher {
      * @return value if key is present or default value otherwise
      */
     default boolean getBooleanProperty(String key, boolean defaultValue) {
-        Object value = getProperty(key, defaultValue);
-        return Boolean.parseBoolean((String) value);
+        Object value = getProperty(key, null);
+        return value != null
+                ? Boolean.valueOf((String) value)
+                : defaultValue;
     }
 
     /**
@@ -93,8 +95,10 @@ public interface Configuration extends Publisher {
      * @return value if key is present or default value otherwise
      */
     default int getIntProperty(String key, int defaultValue) {
-        Object value = getProperty(key, defaultValue);
-        return (Integer) value;
+        Object value = getProperty(key, null);
+        return value != null
+                ? Integer.parseInt((String) value)
+                : defaultValue;
     }
 
     /**
@@ -115,8 +119,10 @@ public interface Configuration extends Publisher {
      * @return value if key is present or default value otherwise
      */
     default double getDoubleProperty(String key, double defaultValue) {
-        Object value = getProperty(key, defaultValue);
-        return Double.parseDouble((String) value);
+        Object value = getProperty(key, null);
+        return value != null
+                ? Double.parseDouble((String) value)
+                : defaultValue;
     }
 
     /**
@@ -137,7 +143,9 @@ public interface Configuration extends Publisher {
      * @return value if key is present or default value otherwise
      */
     default String getStringProperty(String key, String defaultValue) {
-        Object value = getProperty(key, defaultValue);
-        return String.valueOf(value);
+        Object value = getProperty(key, null);
+        return value != null
+                ? String.valueOf(value)
+                : defaultValue;
     }
 }
