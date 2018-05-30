@@ -15,6 +15,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
     }
 
     dependencies {
@@ -23,7 +24,6 @@ subprojects {
 
         testCompile group: 'junit', name: 'junit', version: junitVersion
         testCompile group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
-
     }
 
     jar.doFirst {

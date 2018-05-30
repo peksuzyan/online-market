@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Market>
+    <Properties>
+        <property key="com.gmail.eksuzyan.pavel.market.model.db.host" value="localhost"/>
+        <property key="com.gmail.eksuzyan.pavel.market.config.storage.reload.period" value="30"/>
+        <property key="com.gmail.eksuzyan.pavel.market.model.db.port" value="3306"/>
+        <property key="com.gmail.eksuzyan.pavel.market.model.db.user.name" value="market-test"/>
+        <property key="com.gmail.eksuzyan.pavel.market.model.db.user.pwd" value="market-test123"/>
+        <property key="com.gmail.eksuzyan.pavel.market.config.storage.reload.delay" value="0"/>
+        <property key="com.gmail.eksuzyan.pavel.market.config.storage.name" value="config-test-db.xml"/>
+        <property key="com.gmail.eksuzyan.pavel.market.model.db.sid" value="market_test"/>
+        <property key="com.gmail.eksuzyan.pavel.market.model.db.admin.name" value="market-admin"/>
+        <property key="com.gmail.eksuzyan.pavel.market.model.db.admin.pwd" value="market-admin123"/>
+    </Properties>
+</Market>
