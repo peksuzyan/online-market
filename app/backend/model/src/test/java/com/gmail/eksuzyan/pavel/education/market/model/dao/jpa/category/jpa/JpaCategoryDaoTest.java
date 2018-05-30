@@ -12,16 +12,17 @@ import javax.persistence.*;
 import java.util.*;
 
 import static com.gmail.eksuzyan.pavel.education.market.config.util.Settings.STORAGE_NAME;
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Stream.of;
 import static org.junit.Assert.*;
 
-@SuppressWarnings("Duplicates")
 public class JpaCategoryDaoTest {
 
     private static ConfigurationFactory configurationFactory;
     private static EntityManagerFactory entityManagerFactory;
     private static JdbcDatabaseHelper databaseHelper;
 
-    private EntityManager entityManager;
+    private static EntityManager entityManager;
 
     @BeforeClass
     public static void init() {
@@ -37,27 +38,24 @@ public class JpaCategoryDaoTest {
         entityManagerFactory =
                 Persistence.createEntityManagerFactory("MarketDatabase", settings.getJpaProperties());
 
-//        assert databaseHelper.createSchema();
-//        entityManager = entityManagerFactory.createEntityManager();
+        assert databaseHelper.createSchema();
+        entityManager = entityManagerFactory.createEntityManager();
     }
 
     @Before
     public void setUp() {
-        assert databaseHelper.createSchema();
-        entityManager = entityManagerFactory.createEntityManager();
-//        entityManager.getTransaction().begin();
+        entityManager.getTransaction().begin();
     }
 
     @After
     public void tearDown() {
-//        entityManager.getTransaction().rollback();
-        entityManager.close();
-        assert databaseHelper.dropSchema();
+        entityManager.getTransaction().rollback();
     }
 
     @AfterClass
     public static void destroy() throws Exception {
-
+        entityManager.close();
+        assert databaseHelper.dropSchema();
 
         if (entityManagerFactory != null)
             entityManagerFactory.close();
@@ -84,26 +82,11 @@ public class JpaCategoryDaoTest {
         dao.create(entity);
     }
 
-    @Test(expected = TransactionRequiredException.class)
-    public void testCreateExTransactionRequired() {
-        JpaCategoryDao dao = new JpaCategoryDao(entityManager);
-
-        dao.create(new Category());
-    }
-
     @Test
     public void testCreatePos() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        Long result;
-        try {
-            entityManager.getTransaction().begin();
-            result = dao.create(new Category());
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-            throw ex;
-        }
+        Long result = dao.create(new Category());
 
         assertNotNull(result);
     }
@@ -128,15 +111,7 @@ public class JpaCategoryDaoTest {
     public void testReadPos() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        Long pk;
-        try {
-            entityManager.getTransaction().begin();
-            pk = dao.create(new Category());
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-            throw ex;
-        }
+        Long pk = dao.create(new Category());
 
         Optional<Category> result = dao.read(pk);
 
@@ -157,62 +132,30 @@ public class JpaCategoryDaoTest {
         dao.update(1L, null);
     }
 
-    @Test(expected = TransactionRequiredException.class)
-    public void testUpdateExTransactionRequired() {
-        JpaCategoryDao dao = new JpaCategoryDao(entityManager);
-
-        Long pk;
-        try {
-            entityManager.getTransaction().begin();
-            pk = dao.create(new Category());
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-            throw ex;
-        }
-
-        dao.update(pk, e -> e.setName("name"));
-    }
-
     @Test(expected = EntityNotFoundException.class)
     public void testUpdateExEntityAlreadyRemoved() {
-        try {
-            JpaCategoryDao dao = new JpaCategoryDao(entityManager);
+        JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-            entityManager.getTransaction().begin();
-            Long pk = dao.create(new Category());
+        Long pk = dao.create(new Category());
 
-            Category entity = new Category();
-            entity.setId(pk);
+        Category entity = new Category();
+        entity.setId(pk);
 
-            dao.delete(entity);
+        dao.delete(entity);
 
-            entity = new Category();
-            entity.setId(pk);
+        entity = new Category();
+        entity.setId(pk);
 
-            dao.update(pk, e -> e.setName("name"));
-            entityManager.getTransaction().commit();
-        } catch (EntityNotFoundException ex) {
-            entityManager.getTransaction().rollback();
-            throw ex;
-        }
+        dao.update(pk, e -> e.setName("name"));
     }
 
     @Test
     public void testUpdaterPos() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        Long pk;
-        try {
-            entityManager.getTransaction().begin();
-            pk = dao.create(new Category());
+        Long pk = dao.create(new Category());
 
-            dao.update(pk, e -> e.setName("name"));
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-            throw ex;
-        }
+        dao.update(pk, e -> e.setName("name"));
 
         Category entity = dao.read(pk).orElseThrow(AssertionError::new);
 
@@ -233,52 +176,20 @@ public class JpaCategoryDaoTest {
         dao.delete((Long) null);
     }
 
-    @Test(expected = TransactionRequiredException.class)
-    public void testDeleteExTransactionRequired() {
-        JpaCategoryDao dao = new JpaCategoryDao(entityManager);
-
-        Long pk;
-        try {
-            entityManager.getTransaction().begin();
-            pk = dao.create(new Category());
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-            throw ex;
-        }
-
-        dao.delete(pk);
-    }
-
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteExEntityNotFound() {
-        try {
-            JpaCategoryDao dao = new JpaCategoryDao(entityManager);
+        JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-            entityManager.getTransaction().begin();
-            dao.delete(1L);
-            entityManager.getTransaction().commit();
-        } catch (EntityNotFoundException ex) {
-            entityManager.getTransaction().rollback();
-            throw ex;
-        }
+        dao.delete(1L);
     }
 
     @Test
     public void testDeletePos() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        Long pk;
-        try {
-            entityManager.getTransaction().begin();
-            pk = dao.create(new Category());
+        Long pk = dao.create(new Category());
 
-            dao.delete(pk);
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-            throw ex;
-        }
+        dao.delete(pk);
 
         assertFalse(dao.read(pk).isPresent());
     }
@@ -287,15 +198,7 @@ public class JpaCategoryDaoTest {
     public void testCreateOrUpdatePos1() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        Category entity;
-        try {
-            entityManager.getTransaction().begin();
-            entity = dao.createOrUpdate(new Category());
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-            throw ex;
-        }
+        Category entity = dao.createOrUpdate(new Category());
 
         assertTrue(dao.read(entity.getPk()).isPresent());
     }
@@ -304,21 +207,13 @@ public class JpaCategoryDaoTest {
     public void testCreateOrUpdatePos2() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        Long pk;
-        try {
-            entityManager.getTransaction().begin();
-            pk = dao.create(new Category());
+        Long pk = dao.create(new Category());
 
-            Category entity = new Category();
-            entity.setId(pk);
-            entity.setName("name");
+        Category entity = new Category();
+        entity.setId(pk);
+        entity.setName("name");
 
-            dao.createOrUpdate(entity);
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-            throw ex;
-        }
+        dao.createOrUpdate(entity);
 
         Category updated = dao.read(pk).orElseThrow(AssertionError::new);
 
@@ -330,13 +225,6 @@ public class JpaCategoryDaoTest {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
         dao.createOrUpdate(null);
-    }
-
-    @Test(expected = TransactionRequiredException.class)
-    public void testCreateOrUpdateExTransactionRequired() {
-        JpaCategoryDao dao = new JpaCategoryDao(entityManager);
-
-        dao.createOrUpdate(new Category());
     }
 
     @Test(expected = NullPointerException.class)
@@ -364,13 +252,15 @@ public class JpaCategoryDaoTest {
     public void testReadAllPos() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        entityManager.getTransaction().begin();
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
-        entityManager.getTransaction().commit();
+        Category e1 = dao.createOrUpdate(new Category());
+        @SuppressWarnings("unused")
+        Category e2 = dao.createOrUpdate(new Category());
+        Category e3 = dao.createOrUpdate(new Category());
 
-        List<Category> result = dao.readAll(new HashSet<>(Arrays.asList(1L, 3L)));
+        List<Category> result = dao.readAll(
+                of(e1, e3)
+                        .map(Category::getId)
+                        .collect(toSet()));
 
         assertEquals(2, result.size());
     }
@@ -379,13 +269,19 @@ public class JpaCategoryDaoTest {
     public void testReadAllNeg() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        entityManager.getTransaction().begin();
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
-        entityManager.getTransaction().commit();
+        Category e1 = dao.createOrUpdate(new Category());
+        Category e2 = dao.createOrUpdate(new Category());
+        Category e3 = dao.createOrUpdate(new Category());
 
-        List<Category> result = dao.readAll(new HashSet<>(Arrays.asList(4L, 0L)));
+        long maxPk = of(e1, e2, e3)
+                .mapToLong(Category::getId)
+                .max()
+                .orElseThrow(AssertionError::new);
+
+        List<Category> result = dao.readAll(new HashSet<>(
+                Arrays.asList(
+                        Long.sum(maxPk, 1L),
+                        Long.sum(maxPk, 2L))));
 
         assertTrue(result.isEmpty());
     }
@@ -415,13 +311,15 @@ public class JpaCategoryDaoTest {
     public void testDeleteAllPos1() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        entityManager.getTransaction().begin();
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
+        Category e1 = dao.createOrUpdate(new Category());
+        @SuppressWarnings("unused")
+        Category e2 = dao.createOrUpdate(new Category());
+        Category e3 = dao.createOrUpdate(new Category());
 
-        int result = dao.deleteAll(new HashSet<>(Arrays.asList(1L, 3L)));
-        entityManager.getTransaction().commit();
+        int result = dao.deleteAll(
+                of(e1, e3)
+                        .map(Category::getId)
+                        .collect(toSet()));
 
         assertEquals(2, result);
     }
@@ -430,15 +328,19 @@ public class JpaCategoryDaoTest {
     public void testDeleteAllPos2() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        entityManager.getTransaction().begin();
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
+        Category e1 = dao.createOrUpdate(new Category());
+        Category e2 = dao.createOrUpdate(new Category());
+        Category e3 = dao.createOrUpdate(new Category());
 
-        dao.deleteAll(new HashSet<>(Arrays.asList(1L, 3L)));
-        entityManager.getTransaction().commit();
+        dao.deleteAll(
+                of(e1, e3)
+                        .map(Category::getId)
+                        .collect(toSet()));
 
-        List<Category> result = dao.readAll(new HashSet<>(Arrays.asList(1L, 2L, 3L)));
+        List<Category> result = dao.readAll(
+                of(e1, e2, e3)
+                        .map(Category::getId)
+                        .collect(toSet()));
 
         assertEquals(1, result.size());
     }
@@ -447,13 +349,19 @@ public class JpaCategoryDaoTest {
     public void testDeleteAllNeg1() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        entityManager.getTransaction().begin();
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
+        Category e1 = dao.createOrUpdate(new Category());
+        Category e2 = dao.createOrUpdate(new Category());
+        Category e3 = dao.createOrUpdate(new Category());
 
-        int result = dao.deleteAll(new HashSet<>(Arrays.asList(4L, 0L)));
-        entityManager.getTransaction().commit();
+        long maxPk = of(e1, e2, e3)
+                .mapToLong(Category::getId)
+                .max()
+                .orElseThrow(AssertionError::new);
+
+        int result = dao.deleteAll(new HashSet<>(
+                Arrays.asList(
+                        Long.sum(maxPk, 1L),
+                        Long.sum(maxPk, 2L))));
 
         assertEquals(0, result);
     }
@@ -462,15 +370,24 @@ public class JpaCategoryDaoTest {
     public void testDeleteAllNeg2() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        entityManager.getTransaction().begin();
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
-        dao.createOrUpdate(new Category());
+        Category e1 = dao.createOrUpdate(new Category());
+        Category e2 = dao.createOrUpdate(new Category());
+        Category e3 = dao.createOrUpdate(new Category());
 
-        dao.deleteAll(new HashSet<>(Arrays.asList(4L, 0L)));
-        entityManager.getTransaction().commit();
+        long maxPk = of(e1, e2, e3)
+                .mapToLong(Category::getId)
+                .max()
+                .orElseThrow(AssertionError::new);
 
-        List<Category> result = dao.readAll(new HashSet<>(Arrays.asList(1L, 2L, 3L)));
+        dao.deleteAll(new HashSet<>(
+                Arrays.asList(
+                        Long.sum(maxPk, 1L),
+                        Long.sum(maxPk, 2L))));
+
+        List<Category> result = dao.readAll(
+                of(e1, e2, e3)
+                        .map(Category::getId)
+                        .collect(toSet()));
 
         assertEquals(3, result.size());
     }
@@ -493,11 +410,9 @@ public class JpaCategoryDaoTest {
     public void testReadAllFromRangePos1() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        entityManager.getTransaction().begin();
         dao.createOrUpdate(new Category());
         dao.createOrUpdate(new Category());
         dao.createOrUpdate(new Category());
-        entityManager.getTransaction().commit();
 
         List<Category> result = dao.readAllFromRange(0, 1);
 
@@ -508,11 +423,9 @@ public class JpaCategoryDaoTest {
     public void testReadAllFromRangePos2() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        entityManager.getTransaction().begin();
         dao.createOrUpdate(new Category());
         dao.createOrUpdate(new Category());
         dao.createOrUpdate(new Category());
-        entityManager.getTransaction().commit();
 
         List<Category> result = dao.readAllFromRange(0, 4);
 
@@ -523,11 +436,9 @@ public class JpaCategoryDaoTest {
     public void testReadAllFromRangeNeg1() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        entityManager.getTransaction().begin();
         dao.createOrUpdate(new Category());
         dao.createOrUpdate(new Category());
         dao.createOrUpdate(new Category());
-        entityManager.getTransaction().commit();
 
         List<Category> result = dao.readAllFromRange(0, 0);
 
@@ -538,11 +449,9 @@ public class JpaCategoryDaoTest {
     public void testReadAllFromRangeNeg2() {
         JpaCategoryDao dao = new JpaCategoryDao(entityManager);
 
-        entityManager.getTransaction().begin();
         dao.createOrUpdate(new Category());
         dao.createOrUpdate(new Category());
         dao.createOrUpdate(new Category());
-        entityManager.getTransaction().commit();
 
         List<Category> result = dao.readAllFromRange(3, 1);
 

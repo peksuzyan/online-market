@@ -5,7 +5,6 @@ import com.gmail.eksuzyan.pavel.education.market.model.entities.product.Category
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
-import javax.persistence.TransactionRequiredException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -42,9 +41,8 @@ public class JpaCategoryDao {
      *
      * @param entity entity
      * @return primary key
-     * @throws NullPointerException         if entity is null
-     * @throws PersistenceException         if entity is detached
-     * @throws TransactionRequiredException if transaction isn't active
+     * @throws NullPointerException if entity is null
+     * @throws PersistenceException if the create fails
      */
     public Long create(Category entity) {
         requireNonNull(entity);
@@ -60,8 +58,8 @@ public class JpaCategoryDao {
      *
      * @param entity entity
      * @return managed entity
-     * @throws NullPointerException         if entity is null
-     * @throws TransactionRequiredException if transaction isn't active
+     * @throws NullPointerException if entity is null
+     * @throws PersistenceException if the create or update fails
      */
     public Category createOrUpdate(Category entity) {
         requireNonNull(entity);
@@ -77,9 +75,9 @@ public class JpaCategoryDao {
      *
      * @param pk      primary key
      * @param updater updater
-     * @throws NullPointerException         if primary key is null
-     * @throws EntityNotFoundException      if entity wasn't found by primary key
-     * @throws TransactionRequiredException if transaction isn't active
+     * @throws NullPointerException    if primary key is null
+     * @throws EntityNotFoundException if entity wasn't found by primary key
+     * @throws PersistenceException    if the update fails
      */
     public void update(Long pk, Consumer<Category> updater) {
         requireNonNull(pk);
@@ -94,9 +92,9 @@ public class JpaCategoryDao {
      * Deletes an entity.
      *
      * @param entity entity
-     * @throws NullPointerException         if entity or its primary key is null
-     * @throws EntityNotFoundException      if entity wasn't found
-     * @throws TransactionRequiredException if transaction isn't active
+     * @throws NullPointerException    if entity or its primary key is null
+     * @throws EntityNotFoundException if entity wasn't found
+     * @throws PersistenceException    if the delete fails
      */
     public void delete(Category entity) {
         requireNonNull(entity);
@@ -108,9 +106,9 @@ public class JpaCategoryDao {
      * Deletes an entity by primary key.
      *
      * @param pk primary key
-     * @throws NullPointerException         if primary key is null
-     * @throws EntityNotFoundException      if entity wasn't found
-     * @throws TransactionRequiredException if transaction isn't active
+     * @throws NullPointerException    if primary key is null
+     * @throws EntityNotFoundException if entity wasn't found
+     * @throws PersistenceException    if the delete fails
      */
     public void delete(Long pk) {
         requireNonNull(pk);
@@ -125,9 +123,9 @@ public class JpaCategoryDao {
      *
      * @param pks primary key set
      * @return the number of deleted entities
-     * @throws NullPointerException         if pks is null or empty
-     * @throws IllegalArgumentException     if pks contains null
-     * @throws TransactionRequiredException if transaction isn't active
+     * @throws NullPointerException     if pks is null or empty
+     * @throws IllegalArgumentException if pks contains null
+     * @throws PersistenceException     if the delete query fails
      */
     @Deprecated
     public int deleteAll(Set<Long> pks) {
