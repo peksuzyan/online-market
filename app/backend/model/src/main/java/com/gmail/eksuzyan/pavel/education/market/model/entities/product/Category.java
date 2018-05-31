@@ -18,7 +18,7 @@ import static com.gmail.eksuzyan.pavel.education.market.model.entities.product.C
                 name = CATEGORY_READ_ALL,
                 query = "SELECT c FROM Category AS c ORDER BY c.id ASC")
 })
-public class Category implements Identifiable, Serializable {
+public class Category implements Identifiable<Long>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,7 +27,12 @@ public class Category implements Identifiable, Serializable {
 
     @Override
     public Long getPk() {
-        return id;
+        return getId();
+    }
+
+    @Override
+    public void setPk(Long pk) {
+        setId(pk);
     }
 
     @Id

@@ -8,14 +8,9 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "Customer")
-public class Customer implements Identifiable, Serializable {
+public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Override
-    public Long getPk() {
-        return id;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

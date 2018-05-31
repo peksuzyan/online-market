@@ -7,13 +7,18 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "Product")
-public class Product implements Identifiable, Serializable {
+public class Product implements Identifiable<Long>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Override
     public Long getPk() {
         return id;
+    }
+
+    @Override
+    public void setPk(Long pk) {
+        id = pk;
     }
 
     @Id

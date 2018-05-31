@@ -11,14 +11,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "Orders")
-public class Order implements Identifiable, Serializable {
+public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Override
-    public Long getPk() {
-        return id;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,14 +10,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "Cart")
-public class Cart implements Identifiable, Serializable {
+public class Cart implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Override
-    public Long getPk() {
-        return id;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

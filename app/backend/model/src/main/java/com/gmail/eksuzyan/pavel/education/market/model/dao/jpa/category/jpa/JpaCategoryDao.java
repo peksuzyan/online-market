@@ -1,143 +1,32 @@
 package com.gmail.eksuzyan.pavel.education.market.model.dao.jpa.category.jpa;
 
+import com.gmail.eksuzyan.pavel.education.market.model.dao.jpa.JpaGenericDao;
+import com.gmail.eksuzyan.pavel.education.market.model.dao.jpa.category.CategoryDao;
 import com.gmail.eksuzyan.pavel.education.market.model.entities.product.Category;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import static com.gmail.eksuzyan.pavel.education.market.model.entities.product.Category.CATEGORY_READ_ALL;
 import static com.gmail.eksuzyan.pavel.education.market.model.entities.product.Category.CATEGORY_READ_ALL_BY_PK;
-import static java.util.Objects.requireNonNull;
 
-public class JpaCategoryDao {
-
-    private EntityManager em;
+public class JpaCategoryDao extends JpaGenericDao<Long, Category> implements CategoryDao {
 
     public JpaCategoryDao(EntityManager em) {
-        this.em = em;
+        super(em);
     }
 
     /**
-     * Gets an entity by primary key.
+     * Returns class object of entity which belongs to this dao.
      *
-     * @param pk primary key
-     * @return entity
-     * @throws NullPointerException if primary key is null
+     * @return class object
      */
-    public Optional<Category> read(Long pk) {
-        requireNonNull(pk);
-
-        return Optional.ofNullable(em.find(getClazz(), pk));
-    }
-
-    /**
-     * Creates an entity.
-     *
-     * @param entity entity
-     * @return primary key
-     * @throws NullPointerException if entity is null
-     * @throws PersistenceException if the create fails
-     */
-    public Long create(Category entity) {
-        requireNonNull(entity);
-
-        em.persist(entity);
-        em.flush();
-
-        return entity.getPk();
-    }
-
-    /**
-     * Creates or updates an entity if specified by primary key found.
-     *
-     * @param entity entity
-     * @return managed entity
-     * @throws NullPointerException if entity is null
-     * @throws PersistenceException if the create or update fails
-     */
-    public Category createOrUpdate(Category entity) {
-        requireNonNull(entity);
-
-        Category merged = em.merge(entity);
-        em.flush();
-
-        return merged;
-    }
-
-    /**
-     * Updates an entity.
-     *
-     * @param pk      primary key
-     * @param updater updater
-     * @throws NullPointerException    if primary key is null
-     * @throws EntityNotFoundException if entity wasn't found by primary key
-     * @throws PersistenceException    if the update fails
-     */
-    public void update(Long pk, Consumer<Category> updater) {
-        requireNonNull(pk);
-        requireNonNull(updater);
-
-        Category managed = getManaged(pk);
-        updater.accept(managed);
-        em.flush();
-    }
-
-    /**
-     * Deletes an entity.
-     *
-     * @param entity entity
-     * @throws NullPointerException    if entity or its primary key is null
-     * @throws EntityNotFoundException if entity wasn't found
-     * @throws PersistenceException    if the delete fails
-     */
-    public void delete(Category entity) {
-        requireNonNull(entity);
-
-        delete(entity.getPk());
-    }
-
-    /**
-     * Deletes an entity by primary key.
-     *
-     * @param pk primary key
-     * @throws NullPointerException    if primary key is null
-     * @throws EntityNotFoundException if entity wasn't found
-     * @throws PersistenceException    if the delete fails
-     */
-    public void delete(Long pk) {
-        requireNonNull(pk);
-
-        Category managed = getManaged(pk);
-        em.remove(managed);
-        em.flush();
-    }
-
-    /**
-     * Deletes a list of entities by specified primary key set.
-     *
-     * @param pks primary key set
-     * @return the number of deleted entities
-     * @throws NullPointerException     if pks is null or empty
-     * @throws IllegalArgumentException if pks contains null
-     * @throws PersistenceException     if the delete query fails
-     */
-    @Deprecated
-    public int deleteAll(Set<Long> pks) {
-        if (pks == null || pks.isEmpty())
-            throw new NullPointerException("PKs cannot be null or empty. ");
-
-        if (pks.stream().anyMatch(Objects::isNull))
-            throw new IllegalArgumentException("PKs can't contain null. ");
-
-        return em.createQuery("DELETE FROM Category AS c WHERE c.id IN :pks")
-                .setParameter("pks", pks)
-                .executeUpdate();
+    @Override
+    protected Class<Category> getClazz() {
+        return Category.class;
     }
 
     /**
@@ -148,6 +37,7 @@ public class JpaCategoryDao {
      * @throws NullPointerException     if pks is null or empty
      * @throws IllegalArgumentException if pks contains null
      */
+    @Override
     public List<Category> readAll(Set<Long> pks) {
         if (pks == null || pks.isEmpty())
             throw new NullPointerException("PKs cannot be null or empty. ");
@@ -166,8 +56,10 @@ public class JpaCategoryDao {
      * @param skip  a number of records skipped before retrieving by the query
      * @param limit a max number of records retrieved by the query
      * @return a list of entities
+     * @throws IllegalArgumentException if any of arg is negative
      */
-    public List<Category> readAllFromRange(int skip, int limit) {
+    @Override
+    public List<Category> readAll(int skip, int limit) {
         if (skip < 0 || limit < 0)
             throw new IllegalArgumentException(
                     "Arguments cannot be negative: skip=" + skip + ", limit=" + limit);
@@ -179,22 +71,25 @@ public class JpaCategoryDao {
     }
 
     /**
-     * Makes an entity manageable by current persistence context.
+     * Deletes a list of entities by specified primary key set.
      *
-     * @param pk primary key
-     * @return manageable entity
-     * @throws EntityNotFoundException if entity wasn't found
+     * @param pks primary key set
+     * @return the number of deleted entities
+     * @throws NullPointerException     if pks is null or empty
+     * @throws IllegalArgumentException if pks contains null
+     * @throws PersistenceException     if the delete query fails
      */
-    protected Category getManaged(Long pk) {
-        return em.getReference(getClazz(), pk);
-    }
+    @Deprecated
+    @Override
+    public int deleteAll(Set<Long> pks) {
+        if (pks == null || pks.isEmpty())
+            throw new NullPointerException("PKs cannot be null or empty. ");
 
-    /**
-     * Returns class object of entity which belongs to this dao.
-     *
-     * @return class object
-     */
-    protected Class<Category> getClazz() {
-        return Category.class;
+        if (pks.stream().anyMatch(Objects::isNull))
+            throw new IllegalArgumentException("PKs can't contain null. ");
+
+        return em.createQuery("DELETE FROM Category AS c WHERE c.id IN :pks")
+                .setParameter("pks", pks)
+                .executeUpdate();
     }
 }
