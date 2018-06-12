@@ -10,12 +10,47 @@ CREATE TABLE PRODUCT
 (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT NOT NULL,
   title VARCHAR(100),
-  description VARCHAR(255),
   price DOUBLE UNSIGNED,
   disabled TINYINT(1) UNSIGNED DEFAULT '0',
-  category_id BIGINT(20) NOT NULL,
-  CONSTRAINT fk_category_id FOREIGN KEY(category_id) REFERENCES CATEGORY(id)
+  category VARCHAR(25) NOT NULL,
+  /* BOOK */
+  description VARCHAR(255),
+  /* MAGAZINE */
+  publisher VARCHAR(100),
+  rotation TINYINT(2),
+  /* BOOK & PICTURE */
+  author VARCHAR(100),
+  published DATE,
+  /* BOOK & MAGAZINE */
+  pages SMALLINT
 );
+
+# CREATE TABLE BOOK
+# (
+#   product_id BIGINT(20) NOT NULL,
+#   author VARCHAR(100),
+#   description VARCHAR(255),
+#   pages SMALLINT,
+#   published DATE,
+#   CONSTRAINT fk_product_id FOREIGN KEY(product_id) REFERENCES PRODUCT(id)
+# );
+#
+# CREATE TABLE MAGAZINE
+# (
+#   product_id BIGINT(20) NOT NULL,
+#   publisher VARCHAR(100),
+#   pages SMALLINT,
+#   rotation TINYINT(2),
+#   CONSTRAINT fk_product_id FOREIGN KEY(product_id) REFERENCES PRODUCT(id)
+# );
+#
+# CREATE TABLE PICTURE
+# (
+#   product_id BIGINT(20) NOT NULL,
+#   author VARCHAR(100),
+#   published DATE,
+#   CONSTRAINT fk_product_id FOREIGN KEY(product_id) REFERENCES PRODUCT(id)
+# );
 
 # CREATE TABLE STOCK
 # (
@@ -24,7 +59,7 @@ CREATE TABLE PRODUCT
 #   product_id BIGINT(20) NOT NULL,
 #   CONSTRAINT fk1_product_id FOREIGN KEY(product_id) REFERENCES PRODUCT(id)
 # );
-
+#
 # CREATE TABLE ADDRESS (
 #   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT NOT NULL,
 #   country VARCHAR(50),
