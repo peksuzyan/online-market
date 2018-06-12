@@ -190,6 +190,8 @@ public class FileWorkerTest {
         when(settings.getStorageEncoding()).thenReturn("UTF-8");
         when(settings.getStorageReloadPeriod()).thenReturn(30);
         when(settings.getStorageReloadDelay()).thenReturn(0);
+        when(configuration.getProperties()).thenReturn(new Properties());
+        doNothing().when(configuration).addProperties(any());
 
         worker = new FileWorker(
                 configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
@@ -215,6 +217,8 @@ public class FileWorkerTest {
         when(settings.getStorageEncoding()).thenReturn("UTF-8");
         when(settings.getStorageReloadPeriod()).thenReturn(30);
         when(settings.getStorageReloadDelay()).thenReturn(0);
+        when(configuration.getProperties()).thenReturn(new Properties());
+        doNothing().when(configuration).addProperties(any());
 
         worker = new FileWorker(
                 configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
@@ -229,6 +233,8 @@ public class FileWorkerTest {
         when(settings.getStorageEncoding()).thenReturn("UTF-8");
         when(settings.getStorageReloadPeriod()).thenReturn(30);
         when(settings.getStorageReloadDelay()).thenReturn(0);
+        when(configuration.getProperties()).thenReturn(new Properties());
+        doNothing().when(configuration).addProperties(any());
 
         FileWorker watchdog = new FileWorker(
                 configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
@@ -242,6 +248,8 @@ public class FileWorkerTest {
         when(settings.getStorageEncoding()).thenReturn("UTF-8");
         when(settings.getStorageReloadPeriod()).thenReturn(30);
         when(settings.getStorageReloadDelay()).thenReturn(0);
+        when(configuration.getProperties()).thenReturn(new Properties());
+        doNothing().when(configuration).addProperties(any());
 
         worker = new FileWorker(
                 configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
@@ -255,6 +263,8 @@ public class FileWorkerTest {
         when(settings.getStorageEncoding()).thenReturn("UTF-8");
         when(settings.getStorageReloadPeriod()).thenReturn(30);
         when(settings.getStorageReloadDelay()).thenReturn(0);
+        when(configuration.getProperties()).thenReturn(new Properties());
+        doNothing().when(configuration).addProperties(any());
 
         worker = new FileWorker(
                 configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
@@ -271,6 +281,8 @@ public class FileWorkerTest {
         when(settings.getStorageEncoding()).thenReturn("UTF-8");
         when(settings.getStorageReloadPeriod()).thenReturn(30);
         when(settings.getStorageReloadDelay()).thenReturn(0);
+        when(configuration.getProperties()).thenReturn(new Properties());
+        doNothing().when(configuration).addProperties(any());
 
         worker = new FileWorker(
                 configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
@@ -287,6 +299,8 @@ public class FileWorkerTest {
         when(settings.getStorageEncoding()).thenReturn("UTF-8");
         when(settings.getStorageReloadPeriod()).thenReturn(30);
         when(settings.getStorageReloadDelay()).thenReturn(0);
+        when(configuration.getProperties()).thenReturn(new Properties());
+        doNothing().when(configuration).addProperties(any());
 
         worker = new FileWorker(
                 configuration, settings, new JaxbMarshallizer(), storage = new MockStorage());
@@ -371,6 +385,8 @@ public class FileWorkerTest {
         when(settings.getStorageEncoding()).thenReturn("UTF-8");
         when(settings.getStorageReloadDelay()).thenReturn(0);
         when(settings.getStorageReloadPeriod()).thenReturn(30);
+        when(configuration.getProperties()).thenReturn(new Properties());
+        doNothing().when(configuration).addProperties(any());
 
         worker.start();
 
