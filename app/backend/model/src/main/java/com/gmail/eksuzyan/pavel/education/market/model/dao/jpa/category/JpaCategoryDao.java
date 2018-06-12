@@ -1,12 +1,11 @@
-package com.gmail.eksuzyan.pavel.education.market.model.dao.jpa.category.jpa;
+package com.gmail.eksuzyan.pavel.education.market.model.dao.jpa.category;
 
 import com.gmail.eksuzyan.pavel.education.market.model.dao.jpa.JpaGenericDao;
-import com.gmail.eksuzyan.pavel.education.market.model.dao.jpa.category.CategoryDao;
+import com.gmail.eksuzyan.pavel.education.market.model.dao.contract.category.CategoryDao;
 import com.gmail.eksuzyan.pavel.education.market.model.entities.product.Category;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -30,44 +29,23 @@ public class JpaCategoryDao extends JpaGenericDao<Long, Category> implements Cat
     }
 
     /**
-     * Gets a list of entities by specified primary key set.
+     * Gets a name of query for reading all entities by PK defined for this entity.
      *
-     * @param pks primary key set
-     * @return a list of entities
-     * @throws NullPointerException     if pks is null or empty
-     * @throws IllegalArgumentException if pks contains null
+     * @return a name of query
      */
     @Override
-    public List<Category> readAll(Set<Long> pks) {
-        if (pks == null || pks.isEmpty())
-            throw new NullPointerException("PKs cannot be null or empty. ");
-
-        if (pks.stream().anyMatch(Objects::isNull))
-            throw new IllegalArgumentException("PKs can't contain null. ");
-
-        return em.createNamedQuery(CATEGORY_READ_ALL_BY_PK, getClazz())
-                .setParameter("pks", pks)
-                .getResultList();
+    protected String getReadAllByPkQueryName() {
+        return CATEGORY_READ_ALL_BY_PK;
     }
 
     /**
-     * Gets a list of entities skipping a number of first and retrieving at most a limit number.
+     * Gets a name of query for reading all entities defined for this entity.
      *
-     * @param skip  a number of records skipped before retrieving by the query
-     * @param limit a max number of records retrieved by the query
-     * @return a list of entities
-     * @throws IllegalArgumentException if any of arg is negative
+     * @return a name of query
      */
     @Override
-    public List<Category> readAll(int skip, int limit) {
-        if (skip < 0 || limit < 0)
-            throw new IllegalArgumentException(
-                    "Arguments cannot be negative: skip=" + skip + ", limit=" + limit);
-
-        return em.createNamedQuery(CATEGORY_READ_ALL, getClazz())
-                .setFirstResult(skip)
-                .setMaxResults(limit)
-                .getResultList();
+    protected String getReadAllQueryName() {
+        return CATEGORY_READ_ALL;
     }
 
     /**

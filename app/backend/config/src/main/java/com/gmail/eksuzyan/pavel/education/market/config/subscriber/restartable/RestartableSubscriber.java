@@ -7,7 +7,7 @@ import java.util.Collection;
 import static java.util.Collections.unmodifiableCollection;
 
 /**
- * Basic implementation of subscriber with an opportunity to restart itself.
+ * Basic jpa of subscriber with an opportunity to restart itself.
  */
 public abstract class RestartableSubscriber implements Subscriber {
 

@@ -1,16 +1,5 @@
 package com.gmail.eksuzyan.pavel.education.market.model;
 
-import com.gmail.eksuzyan.pavel.education.market.config.Configurations;
-import com.gmail.eksuzyan.pavel.education.market.config.creator.ConfigurationFactory;
-import com.gmail.eksuzyan.pavel.education.market.model.dao.jpa.category.CategoryDao;
-import com.gmail.eksuzyan.pavel.education.market.model.dao.jpa.category.jpa.JpaCategoryDao;
-import com.gmail.eksuzyan.pavel.education.market.model.entities.product.Category;
-import com.gmail.eksuzyan.pavel.education.market.model.util.DatabaseSettings;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 public class Example {
 
     public static void main(String[] args) throws Exception {

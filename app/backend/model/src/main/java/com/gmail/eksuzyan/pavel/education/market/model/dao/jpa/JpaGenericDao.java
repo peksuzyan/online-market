@@ -1,17 +1,20 @@
 package com.gmail.eksuzyan.pavel.education.market.model.dao.jpa;
 
-import com.gmail.eksuzyan.pavel.education.market.model.dao.GenericDao;
+import com.gmail.eksuzyan.pavel.education.market.model.dao.contract.GenericDao;
 import com.gmail.eksuzyan.pavel.education.market.model.entities.Identifiable;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class JpaGenericDao<T, E extends Identifiable<T>> implements GenericDao<T, E> {
+public abstract class JpaGenericDao<T extends Comparable<T>, E extends Identifiable<T>> implements GenericDao<T, E> {
 
     protected EntityManager em;
 
@@ -121,6 +124,68 @@ public abstract class JpaGenericDao<T, E extends Identifiable<T>> implements Gen
     }
 
     /**
+     * Gets a list of entities by specified primary key set.
+     *
+     * @param pks primary key set
+     * @return a list of entities
+     * @throws NullPointerException     if pks is null or empty
+     * @throws IllegalArgumentException if pks contains null
+     */
+    @Override
+    public List<E> readAll(Set<T> pks) {
+        if (pks == null || pks.isEmpty())
+            throw new NullPointerException("PKs cannot be null or empty. ");
+
+        if (pks.stream().anyMatch(Objects::isNull))
+            throw new IllegalArgumentException("PKs can't contain null. ");
+
+        return em.createNamedQuery(getReadAllByPkQueryName(), getClazz())
+                .setParameter("pks", pks)
+                .getResultList();
+    }
+
+    /**
+     * Gets a list of entities skipping a number of first and retrieving at most a limit number.
+     *
+     * @param skip  a number of records skipped before retrieving by the query
+     * @param limit a max number of records retrieved by the query
+     * @return a list of entities
+     * @throws IllegalArgumentException if any of arg is negative
+     */
+    @Override
+    public List<E> readAll(int skip, int limit) {
+        if (skip < 0 || limit < 0)
+            throw new IllegalArgumentException(
+                    "Arguments cannot be negative: skip=" + skip + ", limit=" + limit);
+
+        return em.createNamedQuery(getReadAllQueryName(), getClazz())
+                .setFirstResult(skip)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    /**
+     * Returns class object of entity which belongs to this dao.
+     *
+     * @return class object
+     */
+    protected abstract Class<E> getClazz();
+
+    /**
+     * Gets a name of query for reading all entities by PK defined for this entity.
+     *
+     * @return a name of query
+     */
+    protected abstract String getReadAllByPkQueryName();
+
+    /**
+     * Gets a name of query for reading all entities defined for this entity.
+     *
+     * @return a name of query
+     */
+    protected abstract String getReadAllQueryName();
+
+    /**
      * Makes an entity manageable by current persistence context.
      *
      * @param pk primary key
@@ -131,10 +196,4 @@ public abstract class JpaGenericDao<T, E extends Identifiable<T>> implements Gen
         return em.getReference(getClazz(), pk);
     }
 
-    /**
-     * Returns class object of entity which belongs to this dao.
-     *
-     * @return class object
-     */
-    protected abstract Class<E> getClazz();
 }

@@ -1,6 +1,6 @@
-package com.gmail.eksuzyan.pavel.education.market.model.dao.jpa.category;
+package com.gmail.eksuzyan.pavel.education.market.model.dao.contract.category;
 
-import com.gmail.eksuzyan.pavel.education.market.model.dao.GenericDao;
+import com.gmail.eksuzyan.pavel.education.market.model.dao.contract.GenericDao;
 import com.gmail.eksuzyan.pavel.education.market.model.entities.product.Category;
 
 import java.util.Set;

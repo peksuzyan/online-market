@@ -7,5 +7,8 @@
 
         <class>com.gmail.eksuzyan.pavel.education.market.model.entities.product.Category</class>
         <class>com.gmail.eksuzyan.pavel.education.market.model.entities.product.Product</class>
+        <class>com.gmail.eksuzyan.pavel.education.market.model.entities.product.concrete.Book</class>
+        <class>com.gmail.eksuzyan.pavel.education.market.model.entities.product.concrete.Magazine</class>
+        <class>com.gmail.eksuzyan.pavel.education.market.model.entities.product.concrete.Picture</class>
     </persistence-unit>
 </persistence>

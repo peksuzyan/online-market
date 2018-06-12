@@ -1,4 +1,4 @@
-package com.gmail.eksuzyan.pavel.education.market.model.dao;
+package com.gmail.eksuzyan.pavel.education.market.model.dao.contract;
 
 import com.gmail.eksuzyan.pavel.education.market.model.entities.Identifiable;
 
@@ -13,7 +13,7 @@ import java.util.function.Consumer;
  * @param <T> primary key type
  * @param <E> entity type
  */
-public interface GenericDao<T, E extends Identifiable<T>> {
+public interface GenericDao<T extends Comparable<T>, E extends Identifiable<T>> {
 
     /**
      * Gets an entity by primary key.

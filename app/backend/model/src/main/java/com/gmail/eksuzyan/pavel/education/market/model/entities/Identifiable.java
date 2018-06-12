@@ -5,7 +5,7 @@ package com.gmail.eksuzyan.pavel.education.market.model.entities;
  *
  * @param <U> primary key type
  */
-public interface Identifiable<U> {
+public interface Identifiable<U extends Comparable<U>> {
 
     /**
      * Gets an entity primary key.
